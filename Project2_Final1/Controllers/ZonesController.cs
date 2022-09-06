@@ -5,10 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Project2_Final1.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Project2_Final1.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ZonesController : ControllerBase
@@ -39,6 +43,23 @@ namespace Project2_Final1.Controllers
             }
 
             return zone;
+        }
+        //devices that are part of certain zone
+        [HttpGet("{id}/Device")]
+        public async Task<ActionResult<Zone>> GetDevicesInZone(Guid id)
+        {
+            if(!ZoneExists(id))
+            {
+                return NotFound();
+            }
+            var query = await _context.Zone.Join(_context.Device, zone => zone.ZoneId, device => device.ZoneId, (zone, device) => new
+            {
+                Zone = zone,
+                Device = device,
+            }).Where(entity => entity.Device.ZoneId == id).Select(entity => entity.Device).ToListAsync();
+            return Ok(query);
+
+            
         }
 
         // PUT: api/Zones/5
