@@ -80,7 +80,7 @@ namespace JWTAuthentication
             services.AddControllers();
 
             // For Entity Framework  
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ConnStr")));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             // For Identity  
             services.AddIdentity<ApplicationUser, IdentityRole>()
