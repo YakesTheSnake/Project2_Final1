@@ -44,6 +44,7 @@ namespace Project2_Final1
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
             }
 
             app.UseHttpsRedirection();
